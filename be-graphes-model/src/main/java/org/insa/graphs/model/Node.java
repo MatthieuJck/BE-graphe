@@ -3,6 +3,7 @@ package org.insa.graphs.model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Iterator;
 
 /**
  * <p>
@@ -125,6 +126,10 @@ public final class Node implements Comparable<Node> {
     public List<Arc> getSuccessors() {
         return Collections.unmodifiableList(this.successors);
     }
+    
+    public Iterator<Arc> iterator() {
+        return Collections.unmodifiableList(this.successors).iterator();
+    }
 
     /**
      * @return Location of this node.
@@ -143,6 +148,8 @@ public final class Node implements Comparable<Node> {
         }
         return false;
     }
+    
+
 
     /**
      * Compare the ID of this node with the ID of the given node.

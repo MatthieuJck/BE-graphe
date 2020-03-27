@@ -3,6 +3,7 @@ package org.insa.graphs.model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.*;
 
 /**
  * <p>
@@ -30,13 +31,51 @@ public class Path {
      * @throws IllegalArgumentException If the list of nodes is not valid, i.e. two
      *         consecutive nodes in the list are not connected in the graph.
      * 
-     * @deprecated Need to be implemented.
      */
-    public static Path createFastestPathFromNodes(Graph graph, List<Node> nodes)
-            throws IllegalArgumentException {
+	public static Path createFastestPathFromNodes(Graph graph, List<Node> nodes) throws IllegalArgumentException {
         List<Arc> arcs = new ArrayList<Arc>();
-        // TODO:
-        return new Path(graph, arcs);
+        if (nodes.size() == 0){
+            return new Path(graph);
+        }
+        else if  (nodes.size() == 1){
+            return new Path(graph, nodes.get(0));
+        }
+        else {
+            for ( int i=0; i<nodes.size()-1; i++)
+            {
+                arcs.add(succ_temps(nodes.get(i), nodes.get(i+1)));
+            }
+            return new Path(graph, arcs);
+        }
+    }
+
+    private static Arc succ_temps(Node noeud_depart, Node noeud_arrive) throws IllegalArgumentException {
+        List<Arc> succ = new ArrayList<Arc>();
+        int num_dest = noeud_arrive.getId();
+        double temps_arete = 0;
+        int nb_passage = 0;
+        succ = noeud_depart.getSuccessors();
+
+        List<Arc> arc = new ArrayList<Arc>();
+        for (Arc A : succ) {
+            if (A.getDestination().getId() == num_dest) {
+                nb_passage++;
+                if (nb_passage == 1) {
+                    arc.clear();
+                    temps_arete = A.getMinimumTravelTime();
+                }
+                if (temps_arete >= A.getMinimumTravelTime()) {
+                    temps_arete = A.getMinimumTravelTime();
+                    arc.clear();
+                    arc.add(A);
+                }
+            }
+        }
+        if (nb_passage == 0)
+        {
+            throw new IllegalArgumentException();
+        }
+        return arc.get(0);
     }
 
     /**
@@ -51,14 +90,67 @@ public class Path {
      * @throws IllegalArgumentException If the list of nodes is not valid, i.e. two
      *         consecutive nodes in the list are not connected in the graph.
      * 
-     * @deprecated Need to be implemented.
      */
-    public static Path createShortestPathFromNodes(Graph graph, List<Node> nodes)
-            throws IllegalArgumentException {
-        List<Arc> arcs = new ArrayList<Arc>();
-        // TODO:
-        return new Path(graph, arcs);
-    }
+    public static Path createShortestPathFromNodes(Graph graph, List<Node> nodes) throws IllegalArgumentException {
+		List<Arc> arcs = new ArrayList<Arc>();
+		boolean premier_next_arc = false;
+		Arc next_arc = null;
+		
+		/* 0 noeud dans la liste */
+		if(nodes.size() == 0) {
+			return new Path(graph);
+		}
+		
+		/* 1 noeud */
+		else if(nodes.size() == 1) {
+			return new Path(graph, nodes.get(0));
+		}
+		
+		/* 2+ noeuds */
+		else{
+			Iterator<Node> nodeIter = nodes.iterator();
+			Node origine = nodeIter.next();
+
+			/* Parcours les noeuds */
+			while(nodeIter.hasNext()) {
+				Node destination = nodeIter.next();
+
+				/* Parcours les arcs de ce noeud */
+				Iterator<Arc> arcIter = origine.iterator();
+				
+				while(arcIter.hasNext()) {
+					Arc arc = arcIter.next();
+					
+					/* Vérifie que l'arc va bien au noeud suivant) */
+					if(arc.getDestination().equals(destination)) {
+						/* On prend l'arc le plus court disponible */
+						if (!premier_next_arc) {
+							next_arc = arc;
+							premier_next_arc = true;
+						}
+						else if (arc.getLength() < next_arc.getLength()) {
+							next_arc = arc;
+						}
+					}
+					
+				}
+				/* Vérifie qu'il y a bien un arc entre ces deux noeuds */
+				if (next_arc == null) {
+					throw new IllegalArgumentException();
+				}
+				/* Ajoute l'arc le plus court au path */
+				else {
+					arcs.add(next_arc);
+					origine = destination;
+					premier_next_arc = false;
+				}
+			}
+			
+			return new Path(graph, arcs);
+			
+		}	
+	}
+
 
     /**
      * Concatenate the given paths.
@@ -199,10 +291,30 @@ public class Path {
      * 
      * @return true if the path is valid, false otherwise.
      * 
-     * @deprecated Need to be implemented.
      */
+    
     public boolean isValid() {
-        if (this.isEmpty() == True || this.
+        boolean valide = true;
+        if (this.origin != null && this.arcs.size() != 0) {
+            if (arcs.get(0).getOrigin() != origin) {
+                valide = false;
+            }
+            for (int i = 0; i < arcs.size() - 1; i++) {
+                if (arcs.get(i).getDestination() != arcs.get(i + 1).getOrigin()) {
+                    valide = false;
+                }
+            }
+        } else if (this.origin != null) {
+            if (arcs == null) {
+                valide = false;
+            }
+
+        } else if (this.isEmpty() != true) {
+            valide = false;
+
+        }
+
+        return valide;
     }
 
     /**
