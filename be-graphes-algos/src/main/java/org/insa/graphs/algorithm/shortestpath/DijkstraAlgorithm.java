@@ -57,6 +57,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 			if (current.getNode() == data.getDestination()) {
 				fini = true;
 			}
+			
 			/* Parcours des successeurs du sommet courant */
 			Iterator<Arc> arc = current.getNode().iterator();
 			while (arc.hasNext()) {
@@ -97,6 +98,8 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 						}
 						tas.insert(successeurLabel);
 						predecessorArcs[arcIter.getDestination().getId()] = arcIter;
+						
+						
 					}
 				}
 
