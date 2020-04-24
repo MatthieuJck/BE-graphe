@@ -27,6 +27,7 @@ public abstract class AbstractInputData {
     // Arc filter.
     protected final ArcInspector arcInspector;
 
+
     /**
      * Create a new AbstractInputData instance for the given graph, mode and filter.
      * 
@@ -44,7 +45,7 @@ public abstract class AbstractInputData {
     public Graph getGraph() {
         return graph;
     }
-
+    
     /**
      * Retrieve the cost associated with the given arc according to the underlying
      * arc inspector.
