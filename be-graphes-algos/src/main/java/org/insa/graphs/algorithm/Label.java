@@ -20,7 +20,6 @@ public class Label implements Comparable<Label> {
 		this.arcPere = null;
 	}
 	
-
 	public float getCost() {
 		return cost;
 	}
@@ -72,10 +71,10 @@ public class Label implements Comparable<Label> {
 	@Override
 	public int compareTo(Label autre) {
 		int resultat;
-		if (this.getCost() < autre.getCost()) {
+		if (this.getTotalCost() < autre.getTotalCost()) {
 			resultat = -1;
 		}
-		else if (this.getCost() == autre.getCost()) {
+		else if (this.getTotalCost() == autre.getTotalCost()) {
 			resultat = 0;
 		}
 		else {
@@ -84,4 +83,7 @@ public class Label implements Comparable<Label> {
 		return resultat;
 	}
 
+	public float getTotalCost() {
+		return cost;
+	}
 }

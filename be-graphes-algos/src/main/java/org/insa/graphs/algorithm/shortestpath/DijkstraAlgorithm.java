@@ -82,8 +82,9 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
 				/* Si le successeur n'est pas encore marqué */
 				if (!successeurLabel.isMark()) {
+					
 					/* Vérification de l'amélioration du coût */
-					if((successeurLabel.getCost()>(current.getCost()+data.getCost(arcIter)+(successeurLabel.getCost()-successeurLabel.getCost()))) || (successeurLabel.getCost()==Float.POSITIVE_INFINITY)){
+					if((successeurLabel.getCost()>(current.getCost()+data.getCost(arcIter))) || (successeurLabel.getCost()==Float.POSITIVE_INFINITY)){
 						/* Changement du coût */
 						successeurLabel.setCost(current.getCost()+(float)data.getCost(arcIter));
 						successeurLabel.setPere(current.getNode());
@@ -98,11 +99,9 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 						}
 						tas.insert(successeurLabel);
 						predecessorArcs[arcIter.getDestination().getId()] = arcIter;
-						
-						
+												
 					}
 				}
-
 			}
 		}
 
