@@ -12,7 +12,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 
 	protected int nbSommetsVisites;
 	protected int nbSommets;
-	
+
 	public DijkstraAlgorithm(ShortestPathData data) {
 		super(data);
 		this.nbSommetsVisites = 0;
@@ -57,7 +57,7 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 			if (current.getNode() == data.getDestination()) {
 				fini = true;
 			}
-			
+
 			/* Parcours des successeurs du sommet courant */
 			Iterator<Arc> arc = current.getNode().iterator();
 			while (arc.hasNext()) {
@@ -77,17 +77,21 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 					notifyNodeReached(arcIter.getDestination());
 					successeurLabel = newLabel(successeur, data);
 					tabLabels[successeurLabel.getNode().getId()] = successeurLabel;
+					// a verifier
+					tas.insert(successeurLabel);
 					this.nbSommetsVisites++;
 				}
 
 				/* Si le successeur n'est pas encore marqué */
 				if (!successeurLabel.isMark()) {
-					
+
 					/* Vérification de l'amélioration du coût */
 					if((successeurLabel.getCost()>(current.getCost()+data.getCost(arcIter))) || (successeurLabel.getCost()==Float.POSITIVE_INFINITY)){
 						/* Changement du coût */
 						successeurLabel.setCost(current.getCost()+(float)data.getCost(arcIter));
 						successeurLabel.setPere(current.getNode());
+						
+						
 						/* Si le label est déjà dans le tas */
 						/* On met à jour sa position dans le tas */
 						if(successeurLabel.isInTas()) {
@@ -97,9 +101,11 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 						else {
 							successeurLabel.setInTas();
 						}
+						
+						
 						tas.insert(successeurLabel);
 						predecessorArcs[arcIter.getDestination().getId()] = arcIter;
-												
+
 					}
 				}
 			}
@@ -133,11 +139,11 @@ public class DijkstraAlgorithm extends ShortestPathAlgorithm {
 		return solution;
 	}
 
-
-	private Label newLabel(Node node, ShortestPathData data) {
+	
+	public Label newLabel(Node node, ShortestPathData data) {
 		return new Label(node);
 	}
-	
+
 	public int getNbSommetsVisites() {
 		return this.nbSommetsVisites;
 	}

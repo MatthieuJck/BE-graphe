@@ -10,7 +10,7 @@ public class AStarAlgorithm extends DijkstraAlgorithm {
         super(data);
     }
 
-
+    @Override
     public Label newLabel(Node noeud, ShortestPathData data) {
     	return new LabelStar(noeud,data);
     }
