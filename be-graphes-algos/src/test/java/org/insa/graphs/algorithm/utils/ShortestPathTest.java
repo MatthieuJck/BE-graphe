@@ -28,17 +28,15 @@ public class ShortestPathTest {
 	// On se sert de BellmanFord comme référence étant donné qu'il était déjà codé 
  
 	// Some paths... 
-	private static Path shortPathD, shortPathB, shortPathA, shortPathD2, shortPathB2, shortPathA2; 
+	private static Path shortPathA , shortPathA2 , shortPathB , shortPathB2 , shortPathD, shortPathD2; 
 	private static AbstractSolution.Status emptyPathD, emptyPathA; 
 	private static AbstractSolution.Status nonexistentPathD, nonexistentPathA; 
  
 	@BeforeClass 
 	public static void initAll() throws IOException { 
-		// Test sur la carte carrée 
-		// Récupération des données de la carte carrée 
 		FileInputStream input1 = new FileInputStream("C:/Users/User1/Desktop/maps_pour_begraphe/guyane.mapgr"); 
-		// Contient des chemins inexistants 
 		FileInputStream input2 = new FileInputStream("C:/Users/User1/Desktop/maps_pour_begraphe/guyane.mapgr"); 
+		
 		DataInputStream dataInput1 = new DataInputStream(input1); 
 		BinaryGraphReader binary1 = new BinaryGraphReader(dataInput1); 
 		Graph graph1 = binary1.read(); 
@@ -59,19 +57,19 @@ public class ShortestPathTest {
 		ShortestPathData data4 = new ShortestPathData(graph2, graph2.getNodes().get(14717), graph2.getNodes().get(1126), 
 				Listeinspector.get(0)); 
  
-		// Réalisation des algorithmes sur data 
-		DijkstraAlgorithm D1 = new DijkstraAlgorithm(data); 
-		shortPathD = D1.run().getPath(); 
+		// Lancement des algorithmes sur data 
 		BellmanFordAlgorithm B1 = new BellmanFordAlgorithm(data); 
 		shortPathB = B1.run().getPath(); 
+		DijkstraAlgorithm D1 = new DijkstraAlgorithm(data); 
+		shortPathD = D1.run().getPath(); 
 		AStarAlgorithm A1 = new AStarAlgorithm(data); 
-		shortPathA = A1.run().getPath(); 
+		shortPathA = A1.run().getPath();
 		
 		// Lancement des algorithmes sur data2
-		DijkstraAlgorithm D2 = new DijkstraAlgorithm(data2); 
-		shortPathD2 = D2.run().getPath(); 
 		BellmanFordAlgorithm B2 = new BellmanFordAlgorithm(data2); 
 		shortPathB2 = B2.run().getPath(); 
+		DijkstraAlgorithm D2 = new DijkstraAlgorithm(data2); 
+		shortPathD2 = D2.run().getPath(); 
 		AStarAlgorithm A2 = new AStarAlgorithm(data2); 
 		shortPathA2 = A2.run().getPath(); 
 		
@@ -85,34 +83,29 @@ public class ShortestPathTest {
 		DijkstraAlgorithm D4 = new DijkstraAlgorithm(data4); 
 		nonexistentPathD = D4.run().getStatus(); 
 		AStarAlgorithm A4 = new AStarAlgorithm(data4); 
-		nonexistentPathA = A4.run().getStatus();
- 
-
- 
+		nonexistentPathA = A4.run().getStatus(); 
 	} 
  
-	// Chemin court existant -> vérification de la longueure avec Bellman ford en référence 
-	// référence, test sur les deux cartes 
+	
+	// Chemin court existant -> vérification de la solution optimale en distance
 	@Test 
 	public void Test1() { 
 		assertEquals((long) (shortPathA.getLength()), (long) (shortPathB.getLength())); 
 		assertEquals((long) (shortPathB.getLength()), (long) (shortPathD.getLength())); 
 		assertEquals((long) (shortPathA2.getLength()), (long) (shortPathB2.getLength())); 
 		assertEquals((long) (shortPathB2.getLength()), (long) (shortPathD2.getLength())); 
- 
 	} 
  
-	// Chemin court existant -> vérification du temps avec Bellman ford en référence 
+	// Chemin court existant -> vérification de la solution optimale en temps
 	@Test 
 	public void Test2() { 
 		assertEquals((long) (shortPathA.getMinimumTravelTime()), (long) (shortPathB.getMinimumTravelTime())); 
 		assertEquals((long) (shortPathB.getMinimumTravelTime()), (long) (shortPathD.getMinimumTravelTime())); 
 		assertEquals((long) (shortPathA2.getMinimumTravelTime()), (long) (shortPathB2.getMinimumTravelTime())); 
 		assertEquals((long) (shortPathB2.getMinimumTravelTime()), (long) (shortPathD2.getMinimumTravelTime())); 
- 
 	} 
  
-	// Chemin de longueur nulle, on vérifie le status 
+	// Chemin de longueur nulle, vérification du status 
 	@Test 
 	public void Test3() { 
 		assertTrue(emptyPathA.equals(AbstractSolution.Status.INFEASIBLE)); 
